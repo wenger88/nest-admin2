@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, NotFoundException, Post } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './models/register.dto';
@@ -15,5 +15,20 @@ export class AuthController {
     const hashedPassword = await bcrypt.hash(body.password, 12);
     const newUser = { ...body, password: hashedPassword };
     return this.userService.create(newUser);
+  }
+
+  @Post('login')
+  async login(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ) {
+    const user = await this.userService.findOne({ email });
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new BadRequestException('Invalid credentials!');
+    }
+    return user;
   }
 }
