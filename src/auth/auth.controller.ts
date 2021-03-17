@@ -1,12 +1,14 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   NotFoundException,
   Post,
   Req,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -34,7 +36,7 @@ export class AuthController {
   async login(
     @Body('email') email: string,
     @Body('password') password: string,
-    @Res() response: Response,
+    @Res() response: Response
   ) {
     const user = await this.userService.findOne({ email });
     if (!user) {
@@ -69,6 +71,7 @@ export class AuthController {
   //   };
   // }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('user')
   async user(@Req() request: Request) {
     const cookie = request.cookies['jwt'];
