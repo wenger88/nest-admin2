@@ -18,6 +18,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { AuthGuard } from './auth.guard';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class AuthController {
   constructor(private userService: UserService, private jwtService: JwtService) {}
@@ -33,7 +34,6 @@ export class AuthController {
   }
 
   /*Return response cookie*/
-  @UseInterceptors(ClassSerializerInterceptor)
   @Post('login')
   async login(
     @Body('email') email: string,
@@ -72,8 +72,7 @@ export class AuthController {
   //     access_token: this.jwtService.sign(payload),
   //   };
   // }
-  
-  @UseInterceptors(ClassSerializerInterceptor)
+
   @UseGuards(AuthGuard)
   @Get('user')
   async user(@Req() request: Request) {
@@ -83,6 +82,7 @@ export class AuthController {
     return this.userService.findOne({ id: data.id });
   }
 
+  @UseGuards(AuthGuard)
   @Post('logout')
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt');
