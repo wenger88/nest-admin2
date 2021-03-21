@@ -7,14 +7,15 @@ import {
   Query,
   Res,
   UseGuards,
-  UseInterceptors
-} from "@nestjs/common";
+  UseInterceptors,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { Response } from 'express';
 import { Parser } from 'json2csv';
 import { Order } from './models/order.entity';
 import { OrderItem } from './models/order-item.entity';
+import { HasPermission } from '../permission/has-permission.decorator';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
@@ -23,11 +24,13 @@ export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Get('orders')
+  @HasPermission('orders')
   async all(@Query('page') page = 1) {
     return await this.orderService.paginate(page, ['order_items']);
   }
 
   @Post('export')
+  @HasPermission('orders')
   async export(@Res() res: Response) {
     const parser = new Parser({
       fields: ['ID', 'Name', 'Email', 'Product Title', 'Price', 'Quantity'],
@@ -68,6 +71,7 @@ export class OrderController {
   }
 
   @Get('chart')
+  @HasPermission('orders')
   async chart() {
     return await this.orderService.chart();
   }
