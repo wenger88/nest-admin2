@@ -14,7 +14,7 @@ export class UserService extends AbstractService {
     const { data, meta } = await super.paginate(page, relations);
 
     return {
-      data: data.map(user => {
+      data: data.map((user: User) => {
         const { password, ...data } = user;
         return data;
       }),
