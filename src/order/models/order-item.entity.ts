@@ -17,6 +17,6 @@ export class OrderItem {
     () => Order,
     order => order.order_items
   )
-  @JoinColumn({ name: 'order-items' })
+  @JoinColumn({ name: 'order_id' })
   order: Order;
 }
