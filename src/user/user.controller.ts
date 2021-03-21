@@ -24,8 +24,8 @@ import { UserUpdateDto } from './models/user-update.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()
-  async all(@Query('page') page: number): Promise<User[]> {
-    return await this.userService.paginate(page);
+  async all(@Query('page') page: number) {
+    return await this.userService.paginate(page, ['role']);
   }
 
   @Post()
@@ -42,7 +42,7 @@ export class UserController {
 
   @Get(':id')
   async get(@Param('id') id: number) {
-    return this.userService.findOne({ id });
+    return this.userService.findOne({ id }, ['role']);
   }
 
   @Put(':id')
