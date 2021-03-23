@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { ormConfig } from './database/config/ormconfig';
 import { AuthModule } from './auth/auth.module';
-import { CommonModule } from './common/common.module';
+import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
 import { PermissionModule } from './permission/permission.module';
 import { ProductModule } from './product/product.module';
@@ -12,19 +13,12 @@ import { PermissionGuard } from './permission/permission.guard';
 
 @Module({
   imports: [
-    UserModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'db',
-      port: 3306,
-      username: 'root',
-      password: 'root',
-      database: 'admin',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
+    TypeOrmModule.forRoot(ormConfig()),
     AuthModule,
-    CommonModule,
+    UserModule,
     RoleModule,
     PermissionModule,
     ProductModule,
