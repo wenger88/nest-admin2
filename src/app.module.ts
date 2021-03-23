@@ -16,7 +16,7 @@ import { PermissionGuard } from './permission/permission.guard';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(ormConfig()),
+    TypeOrmModule.forRootAsync(ormConfig()),
     AuthModule,
     UserModule,
     RoleModule,
