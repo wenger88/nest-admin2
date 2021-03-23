@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { ormConfig } from './database/config/ormconfig';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
@@ -10,13 +9,16 @@ import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionGuard } from './permission/permission.guard';
+import { TypeOrmConfigService } from './database/config/ormconfig';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync(ormConfig()),
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
+    }),
     AuthModule,
     UserModule,
     RoleModule,
