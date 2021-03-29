@@ -9,8 +9,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:4200', //change this value based on the project localhost usage
-    credentials: true
+    origin: 'https://nest-be.herokuapp.com/', //change this value based on the project localhost usage
+    credentials: true,
   });
   await app.listen(process.env.PORT || 3000);
 }
